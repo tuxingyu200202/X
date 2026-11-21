@@ -30,6 +30,11 @@ export function Opening({ onOpen }) {
     return () => clearTimeout(timer);
   }, [choice, onOpen, opening]);
 
+  function openCracker(index) {
+    new Audio(content.effects.cracker).play().catch(() => {});
+    setChoice(index);
+  }
+
   function pointerDown(event, index) {
     if (choice !== null || event.button !== 0) return;
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -49,7 +54,7 @@ export function Opening({ onOpen }) {
     gesture.current = null;
     setPull(null);
     // A tap also opens a cracker, while a short accidental drag leaves it in place.
-    if (distance < 12 || distance >= 45) setChoice(index);
+    if (distance < 12 || distance >= 45) openCracker(index);
   }
 
   return <main className="start stage">
@@ -61,7 +66,7 @@ export function Opening({ onOpen }) {
         style={{ '--pull': (pull?.index === index ? pull.distance : 0) + 'px' }}
         onPointerDown={event => pointerDown(event, index)} onPointerMove={event => pointerMove(event, index)}
         onPointerUp={event => pointerUp(event, index)} onPointerCancel={() => { gesture.current = null; setPull(null); }}
-        onClick={event => { if (event.detail === 0) setChoice(index); }}>
+        onClick={event => { if (event.detail === 0) openCracker(index); }}>
         <span className="cracker-end upper" aria-hidden="true" />
         <span className="cracker-bow upper-bow" aria-hidden="true">⋈</span>
         <span className="cracker-core"><i aria-hidden="true">{['✿','♥','✹'][index % 3]}</i><strong>{label}</strong><i aria-hidden="true">✦</i></span>
@@ -93,10 +98,16 @@ function MapPanel({ cities, active, region }) {
   </div>;
 }
 
-function Postcard({ city, index }) {
+function Postcard({ city, index, choice, onAnswer }) {
   const { ride } = content;
-  const [choice, setChoice] = useState(null);
   const quiz = city.quiz;
+  if (quiz && choice === undefined) return <article className="quiz-card">
+    <p className="eyebrow">{ride.quizLabel}</p>
+    <h2>{quiz.prompt}</h2>
+    <div className="quiz-options">
+      {quiz.choices.map((label, answer) => <button type="button" key={label} onClick={() => onAnswer(answer)}>{label}</button>)}
+    </div>
+  </article>;
   return <article className="city-postcard inline-postcard">
     {city.image ? <img src={city.image} alt={city.alt} /> : <div className="photo-placeholder"><span aria-hidden="true">✷</span>{ride.photoPlaceholder}</div>}
     <div className="postcard-caption">
@@ -104,15 +115,8 @@ function Postcard({ city, index }) {
       <h2>{city.name}</h2>
       <p>{city.region}</p>
       {city.note && <p className="city-note">{city.note}</p>}
+      {quiz && choice !== quiz.answer && <p aria-live="polite">{ride.incorrect}</p>}
     </div>
-    {quiz && <details className="optional-quiz">
-      <summary>{ride.quizLabel}</summary>
-      <p>{quiz.prompt}</p>
-      <div className="quiz-options">
-        {quiz.choices.map((label, answer) => <button type="button" key={label} aria-pressed={choice === answer} onClick={() => setChoice(answer)}>{label}</button>)}
-      </div>
-      <p aria-live="polite">{choice !== null && (choice === quiz.answer ? ride.correct : ride.incorrect)}</p>
-    </details>}
   </article>;
 }
 
@@ -121,8 +125,11 @@ export function Ride({ onNext }) {
   const [count, setCount] = useState(0);
   const [turning, setTurning] = useState(false);
   const [selected, setSelected] = useState(0);
+  const [answers, setAnswers] = useState({});
   const cities = ride.cities.slice(0, count);
   const active = cities[selected];
+  const shownCities = cities.filter(city => !city.quiz || answers[city.name] !== undefined);
+  const waiting = shownCities.length !== cities.length;
   const completed = count >= ride.cities.length;
 
   useEffect(() => {
@@ -143,21 +150,21 @@ export function Ride({ onNext }) {
         <div className={'machine' + (turning ? ' turning' : '')}>
           <div className="dome" aria-hidden="true">{Array.from({ length: Math.min(9, ride.cities.length - count) }, (_, index) => <span key={index} />)}</div>
           <div className="machine-body">
-            <button className="knob" type="button" aria-label={ride.turn} disabled={turning || completed} onClick={() => setTurning(true)}><span /></button>
+            <button className="knob" type="button" aria-label={ride.turn} disabled={turning || completed || waiting} onClick={() => setTurning(true)}><span /></button>
             <div className="chute" aria-hidden="true">{count > 0 && <span key={count} className="dispensed" />}</div>
           </div>
         </div>
-        {!completed && <button className="button button-gold" disabled={turning} onClick={() => setTurning(true)}>{turning ? ride.turning : ride.turn}</button>}
-        {completed && <><p className="machine-status">{ride.complete}</p><button className="button button-gold" onClick={onNext}>{ride.next}</button></>}
+        {!completed && <button className="button button-gold" disabled={turning || waiting} onClick={() => setTurning(true)}>{turning ? ride.turning : ride.turn}</button>}
+        {completed && !waiting && <><p className="machine-status">{ride.complete}</p><button className="button button-gold" onClick={onNext}>{ride.next}</button></>}
         <p className="ride-count" aria-live="polite">{count} / {ride.cities.length} {ride.progress}</p>
       </div>
       <div className="map-grid">
         <div className="postcard-slot">
-          {active ? <Postcard key={active.name} city={active} index={selected} /> : <p>{ride.empty}</p>}
+          {active ? <Postcard key={active.name} city={active} index={selected} choice={answers[active.name]} onAnswer={answer => setAnswers(previous => ({ ...previous, [active.name]: answer }))} /> : <p>{ride.empty}</p>}
         </div>
-        <Suitcase cities={cities} selected={selected} onSelect={setSelected} />
-        <MapPanel cities={cities} active={active} />
-        <MapPanel cities={cities} active={active} region />
+        <Suitcase cities={shownCities} selected={shownCities.indexOf(active)} onSelect={index => { if (!waiting) setSelected(cities.indexOf(shownCities[index])); }} />
+        <MapPanel cities={shownCities} active={active} />
+        <MapPanel cities={shownCities} active={active} region />
       </div>
     </div>
   </main>;

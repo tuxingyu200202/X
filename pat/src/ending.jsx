@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import content from './content';
 import { Voice } from './audio';
 
@@ -42,7 +42,7 @@ export function Evenings({ onNext }) {
     <div className="night-windows">
       <div><button type="button" className={'cutout-window' + (lit ? ' lit' : '')} aria-label={evenings.aria} aria-pressed={lit} onClick={lightWindow}><span aria-hidden="true">♥</span></button><p>{evenings.cities[0]}</p></div>
       <div><div className="cutout-window lit" role={lit ? undefined : 'img'} aria-label={evenings.patrik}>{lit
-        ? <button className={'kimi-reveal' + (kimi ? ' kimi-open' : '')} type="button" aria-label={content.extras.kimi} aria-expanded={kimi} onClick={() => setKimi(true)}><Cat eyes={!kimi} /><span className="curtain curtain-left" aria-hidden="true" /><span className="curtain curtain-right" aria-hidden="true" /></button>
+        ? <button className={'kimi-reveal' + (kimi ? ' kimi-open' : '')} type="button" aria-label={content.extras.kimi} aria-expanded={kimi} onClick={() => { new Audio(content.effects.kimi).play().catch(() => {}); setKimi(true); }}><Cat eyes={!kimi} /><span className="curtain curtain-left" aria-hidden="true" /><span className="curtain curtain-right" aria-hidden="true" /></button>
         : <span aria-hidden="true">✦</span>}</div><p>{evenings.cities[1]}</p></div>
     </div>
     {lit && evenings.audio && <Voice src={evenings.audio} controls aria-label={evenings.play} />}
@@ -59,6 +59,19 @@ export function ChristmasTree({ onNext }) {
   const [hung, setHung] = useState([]);
   const [selected, setSelected] = useState(null);
   const [letter, setLetter] = useState(false);
+  const [tearing, setTearing] = useState(false);
+  const tearTimer = useRef(null);
+  useEffect(() => () => clearTimeout(tearTimer.current), []);
+
+  function openLetter() {
+    new Audio(content.effects.kimi).play().catch(() => {});
+    setTearing(true);
+    const delay = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 560;
+    tearTimer.current = setTimeout(() => {
+      setLetter(true);
+      setTearing(false);
+    }, delay);
+  }
   const [star, setStar] = useState(false);
   const [delivery, setDelivery] = useState(0);
   const dialog = useRef(null);
@@ -122,12 +135,13 @@ export function ChristmasTree({ onNext }) {
         <button className="text-action" onClick={() => dialog.current.close()}>{tree.close}</button>
       </article>}
     </dialog>
-    {star && <div className="leo-envelope">
+    {star && <div className={'leo-envelope' + (tearing ? ' tearing' : '')}>
       {!letter && <span className="leo-guard" title={content.extras.leo}><Cat tuxedo /></span>}
-      <button type="button" className="letter-envelope" aria-label={content.extras.openLetter} aria-expanded={letter} onClick={() => setLetter(true)}>
+      <button type="button" className="letter-envelope" aria-label={content.extras.openLetter} aria-expanded={letter} disabled={tearing || letter} onClick={openLetter}>
         {letter ? <><span className="paw-print" aria-hidden="true">🐾</span>{tree.letterLabel}</> : <span aria-hidden="true">♥</span>}
       </button>
     </div>}
+    {tearing && <p role="status">{content.extras.leo}</p>}
     {letter && <article className="christmas-letter">
       <h2>{tree.letterLabel}</h2>
       {tree.letter.map(paragraph => <p key={paragraph}>{paragraph}</p>)}

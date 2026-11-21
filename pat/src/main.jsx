@@ -12,7 +12,7 @@ import './ending.css';
 import './christmas-final.css';
 import { Music, Voice } from './audio';
 import { BathBreak, Evenings, ChristmasTree } from './ending';
-import { SuitcaseFinale } from './suitcase';
+import { GiftFinale } from './suitcase';
 import { Storybook } from './storybook';
 
 document.title = content.title;
@@ -27,6 +27,7 @@ function Cover({ onOpen }) {
         <p className="eyebrow">{cover.dedication}</p>
         <h1 tabIndex={-1}>{cover.title}</h1>
         <p>{cover.subtitle}</p>
+        <p className="headphone-note">{cover.headphoneNote}</p>
         <button className="button button-gold" onClick={onOpen}>{cover.button}</button>
       </div>
     </div>
@@ -78,7 +79,7 @@ function Finish({ onNext }) {
     <p className="stage-intro">{run.intro}</p>
     <div className="run-course">
       <div className={'track' + (crossed ? ' crossed' : '')} aria-hidden="true" style={{ '--runner': (7 + progress * .88) + '%' }}><span>♥</span></div>
-      <div className="track-dates"><time dateTime="2026-07-24">{run.startDate}</time><span>{run.finishDate}</span></div>
+      <div className="track-dates"><time dateTime="2026-07-24">{run.startDate}</time><time dateTime="2026-12-25">{run.finishDate}</time></div>
     </div>
     <p className="checkpoint" aria-live="polite">{run.checkpoints[checkpoint]}</p>
     {!crossed && <div className="running-actions">
@@ -93,6 +94,24 @@ function Finish({ onNext }) {
       <button className="button button-gold" onClick={onNext}>{run.next}</button>
       <BathBreak />
     </div>}
+  </main>;
+}
+
+function FinalCall({ onNext }) {
+  const { finalCall, extras, call } = content;
+  const [answered, setAnswered] = useState(false);
+  return <main className="stage call-stage">
+    <h1 tabIndex={-1}>{answered ? finalCall.greeting : finalCall.title}</h1>
+    <div className={'iphone' + (answered ? ' family-call' : '')}>
+      <div className="phone-notch" aria-hidden="true" />
+      <p className="eyebrow">{call.app}</p>
+      <img src={finalCall.avatar} alt="Patrik" />
+      {answered ? <>
+        <div className="holiday-guests" aria-hidden="true"><span>🎄</span><span>👨‍👩‍👧</span><img src={extras.kimiImage} alt="" /><img src={extras.leoImage} alt="" /></div>
+        <p>{finalCall.family}</p>
+      </> : <button type="button" className="phone-answer" onClick={() => setAnswered(true)}>{finalCall.answer}</button>}
+    </div>
+    {answered && <button type="button" className="button button-gold call-continue" onClick={onNext}>{finalCall.next}</button>}
   </main>;
 }
 
@@ -123,7 +142,8 @@ function App() {
     {stage === 6 && <ChristmasTree onNext={advance} />}
     <Music audio={music} />
     {stage === 7 && <Storybook onNext={advance} />}
-    {stage === 8 && <SuitcaseFinale onRestart={() => setStage(0)} />}
+    {stage === 8 && <FinalCall onNext={advance} />}
+    {stage === 9 && <GiftFinale onRestart={() => setStage(0)} />}
   </div>;
 }
 

@@ -26,3 +26,8 @@
 .home-window{position:absolute;right:14%;top:14px;width:57px;height:69px;display:grid;place-items:center;background:#edbb59;border:5px solid #965850;border-radius:48% 48% 5px 5px;color:#8a5040;box-shadow:0 0 23px #ebba568a}
 .home-scene img{position:absolute;left:49%;bottom:6px;width:38%;height:58%;object-fit:contain;animation:car-home 2.8s ease-out both}
 @keyframes car-home{from{transform:translateX(-230%)}to{transform:translateX(0)}}
+.quiz-card{padding:1.2rem;text-align:center}.quiz-card h2{font-size:clamp(1.45rem,4vw,2.35rem);margin:.5rem auto}
+.gift-choices{display:flex;justify-content:center;flex-wrap:wrap;gap:1.25rem;margin:1.5rem auto}.gift-choice{border:0;background:none;color:#29423a;font-weight:750;padding:.7rem;min-width:88px}.gift-box{display:block;width:68px;height:58px;margin:0 auto .65rem;background:linear-gradient(90deg,transparent 43%,#ffd779 43% 57%,transparent 57%),#b54b51;border-radius:6px;box-shadow:3px 4px #653c3a44;border-top:8px solid #d98279}.gift-1 .gift-box{background-color:#447c68}.gift-2 .gift-box{background-color:#52778e}.gift-choice[aria-pressed=true] .gift-box{transform:rotate(-8deg);outline:2px solid #314a3c;outline-offset:4px}.date-ticket button{margin-top:1rem}
+.family-call{background:#fff1cd;width:min(335px,87vw)}.holiday-guests{display:flex;align-items:center;justify-content:center;gap:.45rem;flex-wrap:wrap}.holiday-guests span{font-size:1.6rem}.iphone .holiday-guests img{height:55px;width:42px;border:0;border-radius:0;object-fit:contain}
+.greeting-copy .headphone-note{font-size:.88rem;margin-top:.65rem;line-height:1.45}
+.call-continue{margin-top:.65rem}
