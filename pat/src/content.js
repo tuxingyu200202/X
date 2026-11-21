@@ -69,7 +69,7 @@ const content = {
     intro: 'Als ich mit dieser Karte angefangen habe, war unser erstes Treffen genau 120 Tage her. An jedem dieser 120 Tage haben wir uns per Videoanruf gesehen, ohne einen einzigen Tag auszulassen. Das ist unser kleiner Marathon.',
     finish: 'Gedrückt halten und laufen',
     tap: 'Mit einem Tipp ins Ziel',
-    startDate: '24.07.2026',
+    startDate: '2026/7/24',
     finishDate: '2026/12/25',
     checkpoints: ['Aria ruft an …', 'Hallo, mein Schatz!', 'Gute Nacht. Bis morgen.'],
     audio: ['', '', ''],
