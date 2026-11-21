@@ -1,0 +1,45 @@
+import React, { useState } from 'react';
+import content from './content';
+import { StickerArt } from './stickers';
+
+export function Suitcase({ cities, selected, onSelect }) {
+  const { suitcase } = content;
+  return <figure className="travel-case">
+    <div className="case-art">
+      <img src={suitcase.image} alt={suitcase.alt} />
+      <div className="case-stickers">
+        {cities.map((city, index) => {
+          const sticker = suitcase.stickers[index];
+          const label = city.name + (sticker ? ' · ' + sticker.name : '');
+          const artwork = <><StickerArt icon={sticker?.icon} /><span>{city.name}</span></>;
+          return onSelect
+            ? <button key={city.name} type="button" className="case-sticker" aria-label={label} title={label} aria-pressed={selected === index} onClick={() => onSelect(index)}>{artwork}</button>
+            : <span key={city.name} className="case-sticker" title={label}>{artwork}</span>;
+        })}
+      </div>
+    </div>
+    <figcaption>{cities.length ? suitcase.label : suitcase.empty}</figcaption>
+  </figure>;
+}
+
+export function SuitcaseFinale({ onRestart }) {
+  const { suitcase, ride } = content;
+  const [choice, setChoice] = useState(null);
+  const [opened, setOpened] = useState(false);
+  return <main className="stage suitcase-finale">
+    <h1 tabIndex={-1}>{suitcase.title}</h1>
+    <p className="stage-intro">{suitcase.intro}</p>
+    <div className={opened ? "opened-case" : ""}><Suitcase cities={ride.cities} /></div>
+    {!opened && <button className="button button-gold story-next" onClick={() => setOpened(true)}>{suitcase.next}</button>}
+    {opened && <div className="date-choices" role="group" aria-label={suitcase.ticket}>
+      {suitcase.choices.map((label, index) => <button key={label} type="button" className="button button-gold" aria-pressed={choice === index} onClick={() => setChoice(index)}>{label}</button>)}
+    </div>}
+    <div aria-live="polite">
+      {choice !== null && <article className="date-ticket" key={choice}>
+        <p className="eyebrow">{suitcase.ticket}</p><h2>{suitcase.choices[choice]}</h2>{choice === 1 && <p>{suitcase.horrorNote}</p>}<p>{suitcase.shareHint}</p>
+      </article>}
+    </div>
+    {choice !== null && <figure className="home-finale"><div className="home-scene" aria-hidden="true"><span className="home-window">✦</span><img src={suitcase.car} alt="" /></div><figcaption>{suitcase.goodbye}</figcaption></figure>}
+    <button className="text-action story-next" type="button" onClick={onRestart}>{suitcase.restart}</button>
+  </main>;
+}

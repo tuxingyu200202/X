@@ -1,0 +1,23 @@
+.travel-case{margin:0;padding:.75rem;text-align:center;border-radius:16px;background:#fff9ed}
+.case-art{position:relative;width:min(100%,325px);margin:auto}
+.case-art img{display:block;width:100%;height:auto}
+.case-stickers{position:absolute;left:15%;right:15%;top:31%;bottom:13%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;gap:2px 3px}
+.case-sticker{--sticker:#f5ca67;min-width:0;min-height:44px;display:grid;place-items:center;overflow-wrap:anywhere;font:800 clamp(.64rem,1.7vw,.82rem)/1.05 system-ui,sans-serif;padding:3px 1px;background:var(--sticker);color:#24392e;border:1px solid #465748;border-radius:11px 8px 13px 9px;transform:rotate(-5deg);animation:arrive .25s ease-out both}
+.case-sticker:nth-child(3n+2){--sticker:#dbe9e9;transform:rotate(6deg)}
+.case-sticker:nth-child(3n){--sticker:#f1b2ab;transform:rotate(-2deg)}
+button.case-sticker[aria-pressed=true]{outline:2px solid #892b32;outline-offset:1px}
+.travel-case figcaption{font-weight:700;margin-top:.45rem}
+.suitcase-finale{background:#d8e6e8}
+.suitcase-finale .travel-case{max-width:375px;margin:auto}
+.date-choices{display:flex;justify-content:center;flex-wrap:wrap;gap:.75rem;margin:1.25rem auto}
+.date-choices [aria-pressed=true]{background:#dceade}
+.date-ticket{max-width:610px;margin:auto;padding:1.5rem;background:#fff9ed;border:2px dashed #a34242;border-radius:12px;animation:arrive .28s ease-out both}
+.date-ticket h2{font-size:clamp(1.65rem,5vw,3.4rem);margin:.65rem 0}
+.story-next{margin-top:1.25rem}
+.opened-case .case-art{animation:case-open .38s ease-out both}
+@keyframes case-open{50%{transform:rotate(-4deg) translateY(-5px)}}
+.case-stickers{top:35%;bottom:17%;left:18%;right:18%;gap:4px}
+.case-sticker{align-content:center;border:2px solid #fffdf4;border-radius:45% 40% 36% 28%;box-shadow:1px 2px #34463655;gap:1px;padding:2px;min-height:44px}
+.case-sticker svg{width:clamp(18px,5vw,36px);height:auto;display:block}
+.case-sticker:nth-child(3n+2){border-radius:31% 17% 24% 22%}
+.case-sticker:nth-child(3n){border-radius:18% 36% 28% 26%}
