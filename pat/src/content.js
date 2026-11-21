@@ -84,10 +84,6 @@ const content = {
     goodnight: 'Kimi wollte auch kurz Hallo sagen.',
     leo: 'Leo miaut und reißt den Umschlag auf.',
     openLetter: 'Den Weihnachtsbrief öffnen',
-    bath: 'Patriks Badewannen-Pause',
-    bathArt: 'Ein rundes Capybara in der Badewanne, mit Kimi und Leo daneben',
-    bubble: 'Die oberste Seifenblase platzen lassen',
-    message: 'Deine Pflichtdisziplin nach jedem Marathon: ein heißes Bad.',
   },
   evenings: {
     title: 'So haben wir uns immer Gute Nacht gesagt.',

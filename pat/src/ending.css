@@ -36,10 +36,7 @@
 .paper-cat.eyes-only,.paper-cat.eyes-only::before,.paper-cat.eyes-only::after{background:transparent}
 .kimi-reveal{width:52px;height:44px;border:0;background:#263e50;border-radius:8px;align-self:end;margin-bottom:3px}
 .leo-envelope{position:relative;width:max-content;margin:1.25rem auto}.leo-guard{position:absolute;z-index:2;right:-13px;top:-13px;pointer-events:none}.leo-guard::after{content:'';position:absolute;width:13px;height:14px;top:24px;left:17px;background:#fff3dc;border:1px solid #263e50;border-radius:50%}.paw-print{font-size:1.05rem;animation:arrive .3s both}
-.certificate{position:relative}.bath-toggle{position:absolute;top:4px;right:4px;min-width:44px;min-height:44px;border:0;background:transparent;font-size:1.2rem}.bath-break{position:relative;margin:1rem auto 0;width:min(100%,285px);padding:.6rem;background:#dcecec;border-radius:20px}
-.bath-picture{height:115px;position:relative;display:flex;justify-content:space-between;align-items:end;padding:.35rem}.bathing-capy{position:absolute;bottom:28px;left:35%;width:73px;height:62px;border-radius:46% 52% 43% 48%;background:radial-gradient(circle at 62% 47%,#54382d 0 3px,transparent 4px),radial-gradient(ellipse at 77% 64%,#88563e 0 13px,transparent 14px),#ba8157}.bathing-capy::before{content:'';position:absolute;top:-5px;left:13px;width:18px;height:18px;border-radius:50%;background:#ba8157}.paper-bath{position:absolute;left:24%;bottom:10px;width:53%;height:37px;background:#6ba5a5;border:3px solid #40747b;border-radius:8px 8px 24px 22px}
-.bubbles{position:absolute;top:2px;right:14%;display:flex;align-items:center;gap:5px}.bubbles>*{display:block;width:15px;height:15px;border:1px solid #69a3a8;border-radius:50%;background:#f9feef}.bubbles button{width:44px;height:44px;align-self:start}.bath-break p{min-height:1.5rem}
-.leo-envelope.tearing .leo-guard{animation:leo-pull .56s ease-in-out both}
+.certificate{position:relative}.leo-envelope.tearing .leo-guard{animation:leo-pull .56s ease-in-out both}
 .leo-envelope.tearing .letter-envelope{animation:paper-rip .56s ease-in-out both}
 @keyframes leo-pull{50%{transform:translate(-16px,12px) rotate(-12deg)}100%{transform:translate(20px,-7px) rotate(12deg)}}
 @keyframes paper-rip{55%{transform:rotate(-5deg)}100%{clip-path:polygon(0 0,45% 0,51% 28%,57% 0,100% 0,100% 100%,0 100%)}}

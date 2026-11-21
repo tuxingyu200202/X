@@ -7,22 +7,6 @@ function Cat({ tuxedo = false, eyes = false }) {
   return <span className={'paper-cat' + (tuxedo ? ' tuxedo' : '') + (eyes ? ' eyes-only' : '')} aria-hidden="true"><i /><i /></span>;
 }
 
-export function BathBreak() {
-  const { extras } = content;
-  const [open, setOpen] = useState(false);
-  const [popped, setPopped] = useState(false);
-  return <>
-    <button className="bath-toggle" type="button" aria-label={extras.bath} aria-expanded={open} onClick={() => setOpen(value => !value)}>🛁</button>
-    {open && <div className="bath-break">
-      <div className="bath-picture" role="img" aria-label={extras.bathArt}>
-        <Cat /><span className="bathing-capy" /><span className="paper-bath" /><Cat tuxedo />
-      </div>
-      <div className="bubbles"><span aria-hidden="true" /><span aria-hidden="true" />{!popped && <button type="button" onClick={() => setPopped(true)} aria-label={extras.bubble} />}</div>
-      <p aria-live="polite">{popped && extras.message}</p>
-    </div>}
-  </>;
-}
-
 function Globe({ item }) {
   return <span className="snow-globe" aria-hidden="true"><span className={'globe-icon globe-' + item.kind}><i /><i /></span></span>;
 }

@@ -11,7 +11,7 @@ import './suitcase.css';
 import './ending.css';
 import './christmas-final.css';
 import { Music, Voice } from './audio';
-import { BathBreak, Evenings, ChristmasTree } from './ending';
+import { Evenings, ChristmasTree } from './ending';
 import { GiftFinale } from './suitcase';
 import { Storybook } from './storybook';
 
@@ -92,7 +92,6 @@ function Finish({ onNext }) {
     {crossed && <div className="crossed-message certificate" aria-live="polite">
       <h2 className="medal">{run.medal}</h2><p>{run.certificate}</p>
       <button className="button button-gold" onClick={onNext}>{run.next}</button>
-      <BathBreak />
     </div>}
   </main>;
 }
