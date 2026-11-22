@@ -1,3 +1,4 @@
+import { playEffect } from './audio';
 import React, { useState } from 'react';
 import content from './content';
 import './picture-book.css';
@@ -5,22 +6,28 @@ import './picture-book.css';
 export function Storybook({ onNext }) {
   const { storybook } = content;
   const [page, setPage] = useState(0);
-  const scene = storybook.scenes[page];
-  const last = page === storybook.scenes.length - 1;
+  const { scenes } = storybook;
+  const scene = scenes[page];
+  const last = page === scenes.length - 1;
 
   return <main className="stage picture-book">
     <h1 tabIndex={-1}>{storybook.title}</h1>
     <figure className="picture-book-page" key={page}>
-      <img src={scene.image} alt={scene.title} width="1536" height="1024" />
-      <figcaption aria-live="polite">
-        <p className="eyebrow">{storybook.page} {page + 1} / {storybook.scenes.length}</p>
-        <h2>{scene.title}</h2>
-        <p>{scene.text}</p>
+      <div className="picture-book-art">
+        <img src={scene.image} alt={scene.title} width="1200" height="800" decoding="async" />
+      </div>
+      <figcaption>
+        <div className="picture-book-prose">
+          <h2>{scene.title}</h2>
+          <p>{scene.text}</p>
+        </div>
       </figcaption>
     </figure>
-    <div className="picture-book-controls">
-      <button type="button" className="text-action" disabled={page === 0} onClick={() => setPage(value => value - 1)}>{storybook.previous}</button>
-      <button type="button" className="button button-gold" onClick={() => last ? onNext() : setPage(value => value + 1)}>{last ? storybook.finish : storybook.next}</button>
-    </div>
+    {scenes[page + 1] && <link rel="preload" as="image" href={scenes[page + 1].image} />}
+    <nav className="picture-book-controls" aria-label={storybook.title}>
+      <button type="button" className="text-action" disabled={page === 0} data-sound="page" onClick={() => { playEffect('page', .42); setPage(value => value - 1); }}>{storybook.previous}</button>
+      <span className="picture-book-progress" role="status">{storybook.page} {page + 1} / {scenes.length}</span>
+      <button type="button" className="button button-gold" data-sound="page" onClick={() => { playEffect('page', .42); if (last) onNext(); else setPage(value => value + 1); }}>{last ? storybook.finish : storybook.next}</button>
+    </nav>
   </main>;
 }

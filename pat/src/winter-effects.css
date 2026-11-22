@@ -1,0 +1,11 @@
+.ambient-snow{position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.ambient-snow span{position:absolute;top:-8px;width:var(--flake-size);height:var(--flake-size);border-radius:50%;background:#fffbef;box-shadow:0 0 7px #fff4c399;opacity:.46;animation:quiet-snow var(--fall-time) linear var(--fall-delay) infinite}
+@keyframes quiet-snow{to{transform:translate(26px,calc(100dvh + 18px))}}
+.track span{color:#fff5d9;text-shadow:0 0 9px #fff3bd}
+.track.crossed span{color:#ffe08a;animation:runner-star .45s ease-out both}
+@keyframes runner-star{from{scale:.65;opacity:.6}to{scale:1;opacity:1}}
+.home-scene .home-window{padding:0;background:#324554;box-shadow:none;overflow:hidden;z-index:1;transition:background .65s ease,box-shadow .65s ease}
+.home-scene .home-window.window-lit{background:#cb9136;box-shadow:0 0 23px #ebba568a}
+.home-window canvas{display:block;width:100%;height:100%;background:#ffdc8e45;touch-action:none;cursor:crosshair}
+.home-finale figcaption{animation:arrive .8s both}
+@media(prefers-reduced-motion:reduce){.ambient-snow{display:none}.track.crossed span,.home-finale figcaption{animation:none}.home-scene .home-window{transition:none}}

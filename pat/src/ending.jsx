@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import content from './content';
-import { Voice } from './audio';
+import { Voice, playEffect } from './audio';
 
 function Cat({ tuxedo = false, eyes = false }) {
   if (!eyes) return <img className="cat-sticker" src={tuxedo ? content.extras.leoImage : content.extras.kimiImage} alt="" />;
@@ -26,7 +26,7 @@ export function Evenings({ onNext }) {
     <div className="night-windows">
       <div><button type="button" className={'cutout-window' + (lit ? ' lit' : '')} aria-label={evenings.aria} aria-pressed={lit} onClick={lightWindow}><span aria-hidden="true">♥</span></button><p>{evenings.cities[0]}</p></div>
       <div><div className="cutout-window lit" role={lit ? undefined : 'img'} aria-label={evenings.patrik}>{lit
-        ? <button className={'kimi-reveal' + (kimi ? ' kimi-open' : '')} type="button" aria-label={content.extras.kimi} aria-expanded={kimi} onClick={() => { new Audio(content.effects.kimi).play().catch(() => {}); setKimi(true); }}><Cat eyes={!kimi} /><span className="curtain curtain-left" aria-hidden="true" /><span className="curtain curtain-right" aria-hidden="true" /></button>
+        ? <button className={'kimi-reveal' + (kimi ? ' kimi-open' : '')} type="button" data-sound="meow" aria-label={content.extras.kimi} aria-expanded={kimi} onClick={() => { playEffect('kimi'); setKimi(true); }}><Cat eyes={!kimi} /><span className="curtain curtain-left" aria-hidden="true" /><span className="curtain curtain-right" aria-hidden="true" /></button>
         : <span aria-hidden="true">✦</span>}</div><p>{evenings.cities[1]}</p></div>
     </div>
     {lit && evenings.audio && <Voice src={evenings.audio} controls aria-label={evenings.play} />}
@@ -48,7 +48,7 @@ export function ChristmasTree({ onNext }) {
   useEffect(() => () => clearTimeout(tearTimer.current), []);
 
   function openLetter() {
-    new Audio(content.effects.kimi).play().catch(() => {});
+    playEffect('kimi');
     setTearing(true);
     const delay = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 560;
     tearTimer.current = setTimeout(() => {
@@ -94,10 +94,12 @@ export function ChristmasTree({ onNext }) {
     <h1 tabIndex={-1}>{tree.title}</h1>
     {delivery === 2 && <p className="stage-intro">{tree.instruction}</p>}
     <div className={"tree-room delivery-" + delivery}>
-      <span className="cargo-tree tree-branches" aria-hidden="true" />
-      <img src={tree.image} alt="" className="car-arrival" />
+      <div className="tree-delivery-car">
+        <img src={tree.image} alt="" />
+        <span className="cargo-tree" aria-hidden="true"><i className="tree-branches" /><i className="cargo-trunk" /></span>
+      </div>
       <div ref={branches} hidden={delivery !== 2} className={'paper-tree' + (hung.length ? ' tree-lit' : '')}>
-        <button className={'tree-star' + (star ? ' star-lit' : '')} type="button" aria-label={tree.star} aria-pressed={star} disabled={!hung.length} onClick={() => setStar(true)}>✦</button>
+        <button className={'tree-star' + (star ? ' star-lit' : '')} type="button" aria-label={tree.star} aria-pressed={star} disabled={!hung.length} data-sound="star" onClick={() => { if (!star) playEffect('star'); setStar(true); }}>✦</button>
         <div className="tree-branches" aria-hidden="true" />
         <span className="tree-trunk" aria-hidden="true" />
         {hung.map(index => <button key={index} type="button" className={'hung-item hung-' + index} aria-label={tree.ornaments[index].label} onClick={() => inspect(index)}><Globe item={tree.ornaments[index]} /></button>)}
@@ -121,7 +123,7 @@ export function ChristmasTree({ onNext }) {
     </dialog>
     {star && <div className={'leo-envelope' + (tearing ? ' tearing' : '')}>
       {!letter && <span className="leo-guard" title={content.extras.leo}><Cat tuxedo /></span>}
-      <button type="button" className="letter-envelope" aria-label={content.extras.openLetter} aria-expanded={letter} disabled={tearing || letter} onClick={openLetter}>
+      <button type="button" className="letter-envelope" data-sound="meow" aria-label={content.extras.openLetter} aria-expanded={letter} disabled={tearing || letter} onClick={openLetter}>
         {letter ? <><span className="paw-print" aria-hidden="true">🐾</span>{tree.letterLabel}</> : <span aria-hidden="true">♥</span>}
       </button>
     </div>}

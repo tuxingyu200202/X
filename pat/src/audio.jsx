@@ -53,3 +53,19 @@ export const Voice = forwardRef(function Voice(props, forwarded) {
     if (forwarded) forwarded.current = node;
   }} />;
 });
+
+export function playEffect(name, volume = .65) {
+  const clip = new Audio(content.effects[name]);
+  clip.volume = volume;
+  clip.play().catch(() => {});
+  return clip;
+}
+
+export function useRingtone(ringing) {
+  useEffect(() => {
+    if (!ringing) return;
+    const clip = playEffect('ring', .46);
+    clip.loop = true;
+    return () => clip.pause();
+  }, [ringing]);
+}

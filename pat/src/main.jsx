@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import content from './content';
-import { Opening, Ride } from './journey';
+import { Opening, Passports, Ride } from './journey';
 import './style.css';
 import './journey.css';
 import './retro.css';
@@ -10,9 +10,11 @@ import './storybook.css';
 import './suitcase.css';
 import './ending.css';
 import './christmas-final.css';
-import { Music, Voice } from './audio';
+import './winter-effects.css';
+import './passports.css';
+import { Music, Voice, playEffect, useRingtone } from './audio';
 import { Evenings, ChristmasTree } from './ending';
-import { GiftFinale } from './suitcase';
+import { GiftFinale, LoveEnding } from './suitcase';
 import { Storybook } from './storybook';
 
 document.title = content.title;
@@ -37,6 +39,7 @@ function Cover({ onOpen }) {
 function Call({ onNext }) {
   const { call } = content;
   const [connected, setConnected] = useState(false);
+  useRingtone(!connected);
   return <main className="stage call-stage">
     <h1 tabIndex={-1}>{call.title}</h1>
     <div className="iphone">
@@ -78,15 +81,15 @@ function Finish({ onNext }) {
     <h1 tabIndex={-1}>{run.title}</h1>
     <p className="stage-intro">{run.intro}</p>
     <div className="run-course">
-      <div className={'track' + (crossed ? ' crossed' : '')} aria-hidden="true" style={{ '--runner': (7 + progress * .88) + '%' }}><span>♥</span></div>
-      <div className="track-dates"><time dateTime="2026-07-24">{run.startDate}</time><time dateTime="2026-12-25">{run.finishDate}</time></div>
+      <div className={'track' + (crossed ? ' crossed' : '')} aria-hidden="true" style={{ '--runner': (7 + progress * .88) + '%' }}><span>{crossed ? '✦' : '❄'}</span></div>
+      <div className="track-dates"><time dateTime="2026-07-24">{run.startDate}</time><time dateTime="2026-12-24">{run.finishDate}</time></div>
     </div>
     <p className="checkpoint" aria-live="polite">{run.checkpoints[checkpoint]}</p>
     {!crossed && <div className="running-actions">
-      <button className="button button-gold hold"
-        onPointerDown={event => { if (event.button === 0) { event.currentTarget.setPointerCapture(event.pointerId); setRunning(true); } }}
+      <button className="button button-gold hold" data-sound="hold"
+        onPointerDown={event => { if (event.button === 0) { event.currentTarget.setPointerCapture(event.pointerId); playEffect('tap'); setRunning(true); } }}
         onPointerUp={() => setRunning(false)} onPointerCancel={() => setRunning(false)} onLostPointerCapture={() => setRunning(false)}
-        onClick={event => { if (event.detail === 0) setProgress(100); }}>{run.finish}</button>
+        onClick={event => { if (event.detail === 0) { playEffect('tap'); setProgress(100); } }}>{run.finish}</button>
       <button className="text-action" onClick={() => setProgress(100)}>{run.tap}</button>
     </div>}
     {crossed && <div className="crossed-message certificate" aria-live="polite">
@@ -99,6 +102,7 @@ function Finish({ onNext }) {
 function FinalCall({ onNext }) {
   const { finalCall, extras, call } = content;
   const [answered, setAnswered] = useState(false);
+  useRingtone(!answered);
   return <main className="stage call-stage">
     <h1 tabIndex={-1}>{answered ? finalCall.greeting : finalCall.title}</h1>
     <div className={'iphone' + (answered ? ' family-call' : '')}>
@@ -114,6 +118,17 @@ function FinalCall({ onNext }) {
   </main>;
 }
 
+function Snowfall() {
+  return <div className="ambient-snow" aria-hidden="true">
+    {Array.from({ length: 12 }, (_, i) => <span key={i} style={{
+      left: ((i * 37 + 11) % 101) + '%',
+      '--fall-time': (28 + i % 7 * 3) + 's',
+      '--fall-delay': (-i * 4.13) + 's',
+      '--flake-size': (i % 4 === 0 ? 3 : 2) + 'px',
+    }} />)}
+  </div>;
+}
+
 function App() {
   const [stage, setStage] = useState(0);
   const frame = useRef(null);
@@ -125,7 +140,11 @@ function App() {
     frame.current.querySelector('h1')?.focus({ preventScroll: true });
   }, [stage]);
 
-  return <div ref={frame}>
+  return <div ref={frame} onClickCapture={event => {
+    const control = event.target.closest?.('button, a[href], summary, input[type="range"]');
+    if (control && !control.disabled && !control.dataset.sound) playEffect('tap');
+  }}>
+    <Snowfall />
     {stage === 0 && <Cover onOpen={() => {
       if (!music.current.dataset.started && !music.current.dataset.disabled) {
         music.current.dataset.started = '1';
@@ -136,13 +155,15 @@ function App() {
     {stage === 1 && <Opening onOpen={advance} />}
     {stage === 2 && <Call onNext={advance} />}
     {stage === 3 && <Ride onNext={advance} />}
-    {stage === 4 && <Finish onNext={advance} />}
-    {stage === 5 && <Evenings onNext={advance} />}
-    {stage === 6 && <ChristmasTree onNext={advance} />}
+    {stage === 4 && <Passports onNext={advance} />}
+    {stage === 5 && <Finish onNext={advance} />}
+    {stage === 6 && <Evenings onNext={advance} />}
+    {stage === 7 && <ChristmasTree onNext={advance} />}
     <Music audio={music} />
-    {stage === 7 && <Storybook onNext={advance} />}
-    {stage === 8 && <FinalCall onNext={advance} />}
-    {stage === 9 && <GiftFinale onRestart={() => setStage(0)} />}
+    {stage === 8 && <Storybook onNext={advance} />}
+    {stage === 9 && <FinalCall onNext={advance} />}
+    {stage === 10 && <GiftFinale onNext={advance} />}
+    {stage === 11 && <LoveEnding onRestart={() => setStage(0)} />}
   </div>;
 }
 
