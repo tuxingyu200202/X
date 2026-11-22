@@ -67,7 +67,7 @@ const content = {
     title: 'Unsere Spuren',
     open: 'Reisepässe öffnen',
     hint: 'Tippe auf die Pässe oder wische nach oben.',
-    stopLabels: { 'Đà Nẵng': '岘港', Linz: '林茨' },
+    stopLabels: { 'Đà Nẵng': 'Da Nang' },
     owners: [
       { name: 'Aria', country: 'China', inscription: '中华人民共和国', cover: 'art/passport-china.webp' },
       { name: 'Patrik', country: 'Österreich', inscription: 'REPUBLIK ÖSTERREICH', cover: 'art/passport-austria.webp' },
