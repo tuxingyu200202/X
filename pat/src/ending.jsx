@@ -42,20 +42,6 @@ export function ChristmasTree({ onNext }) {
   const { tree } = content;
   const [hung, setHung] = useState([]);
   const [selected, setSelected] = useState(null);
-  const [letter, setLetter] = useState(false);
-  const [tearing, setTearing] = useState(false);
-  const tearTimer = useRef(null);
-  useEffect(() => () => clearTimeout(tearTimer.current), []);
-
-  function openLetter() {
-    playEffect('kimi');
-    setTearing(true);
-    const delay = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 560;
-    tearTimer.current = setTimeout(() => {
-      setLetter(true);
-      setTearing(false);
-    }, delay);
-  }
   const [star, setStar] = useState(false);
   const [delivery, setDelivery] = useState(0);
   const dialog = useRef(null);
@@ -121,12 +107,34 @@ export function ChristmasTree({ onNext }) {
         <button className="text-action" onClick={() => dialog.current.close()}>{tree.close}</button>
       </article>}
     </dialog>
-    {star && <div className={'leo-envelope' + (tearing ? ' tearing' : '')}>
+    {star && <button className="button button-gold" type="button" onClick={onNext}>{tree.toLetter}</button>}
+  </main>;
+}
+
+export function LeoLetter({ onNext }) {
+  const { tree } = content;
+  const [letter, setLetter] = useState(false);
+  const [tearing, setTearing] = useState(false);
+  const tearTimer = useRef(null);
+  useEffect(() => () => clearTimeout(tearTimer.current), []);
+
+  function openLetter() {
+    playEffect('kimi');
+    setTearing(true);
+    const delay = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 560;
+    tearTimer.current = setTimeout(() => {
+      setLetter(true);
+      setTearing(false);
+    }, delay);
+  }
+  return <main className="stage tree-stage leo-stage">
+    <h1 tabIndex={-1}>{tree.letterLabel}</h1>
+    <div className={'leo-envelope' + (tearing ? ' tearing' : '')}>
       {!letter && <span className="leo-guard" title={content.extras.leo}><Cat tuxedo /></span>}
       <button type="button" className="letter-envelope" data-sound="meow" aria-label={content.extras.openLetter} aria-expanded={letter} disabled={tearing || letter} onClick={openLetter}>
         {letter ? <><span className="paw-print" aria-hidden="true">🐾</span>{tree.letterLabel}</> : <span aria-hidden="true">♥</span>}
       </button>
-    </div>}
+    </div>
     {tearing && <p role="status">{content.extras.leo}</p>}
     {letter && <article className="christmas-letter">
       <h2>{tree.letterLabel}</h2>

@@ -42,7 +42,8 @@ const content = {
     turn: 'Am Automaten drehen',
     turning: 'Die Kugel rollt …',
     complete: 'Alle neun Kugeln sind offen.',
-    next: 'Zu unseren Reisepässen',
+    next: 'Koffer weiterziehen',
+    suitcaseHint: 'Zieh den Koffer nach rechts.',
     packPhoto: 'Auf den Koffer kleben',
     closePhoto: 'Foto schließen',
     map: 'Unsere Reise auf der Weltkarte',
@@ -117,6 +118,7 @@ const content = {
     hang: 'An den Baum hängen',
     close: 'Schließen',
     star: 'Den Stern an der Baumspitze anzünden',
+    toLetter: 'Weiter zu Leo und dem Brief',
     letterLabel: 'Für Patrik',
     letter: [
       'Mein lieber Patrik,',

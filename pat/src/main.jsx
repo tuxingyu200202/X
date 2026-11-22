@@ -13,7 +13,7 @@ import './christmas-final.css';
 import './winter-effects.css';
 import './passports.css';
 import { Music, Voice, playEffect, useRingtone } from './audio';
-import { Evenings, ChristmasTree } from './ending';
+import { Evenings, ChristmasTree, LeoLetter } from './ending';
 import { GiftFinale, LoveEnding } from './suitcase';
 import { Storybook } from './storybook';
 
@@ -159,11 +159,12 @@ function App() {
     {stage === 5 && <Finish onNext={advance} />}
     {stage === 6 && <Evenings onNext={advance} />}
     {stage === 7 && <ChristmasTree onNext={advance} />}
+    {stage === 8 && <LeoLetter onNext={advance} />}
     <Music audio={music} />
-    {stage === 8 && <Storybook onNext={advance} />}
-    {stage === 9 && <FinalCall onNext={advance} />}
-    {stage === 10 && <GiftFinale onNext={advance} />}
-    {stage === 11 && <LoveEnding onRestart={() => setStage(0)} />}
+    {stage === 9 && <Storybook onNext={advance} />}
+    {stage === 10 && <FinalCall onNext={advance} />}
+    {stage === 11 && <GiftFinale onNext={advance} />}
+    {stage === 12 && <LoveEnding onRestart={() => setStage(0)} />}
   </div>;
 }
 

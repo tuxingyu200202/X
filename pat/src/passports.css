@@ -74,3 +74,19 @@
 .flying-memory{position:fixed;z-index:50;object-fit:contain;border-radius:10px;background:#fff9ed;pointer-events:none;margin:0}
 @keyframes memory-pop{from{opacity:0;transform:translate(-12px,9px) scale(.86)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.memory-pop{animation:none}}
+
+.ride .ride-count{font-weight:750;color:#314b3c}
+.suitcase-departure{overflow:hidden;padding-bottom:.75rem}
+.suitcase-walk{touch-action:pan-y;cursor:grab;transform:translateX(var(--drag-x))}
+.suitcase-walk .travel-case{margin-inline:auto}
+.suitcase-walk img{user-select:none;-webkit-user-drag:none}
+.suitcase-walk.is-leaving{animation:pull-away .72s ease-in forwards;pointer-events:none}
+@keyframes pull-away{
+  from{transform:translateX(var(--drag-x)) rotate(0)}
+  25%{transform:translateX(calc(var(--drag-x) + 24px)) rotate(7deg)}
+  to{transform:translateX(calc(100% + 60px)) rotate(9deg);opacity:.15}
+}
+.passports-stage .passport-pair{animation:passport-arrival .45s ease-out}
+@keyframes passport-arrival{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.leo-stage .leo-envelope{margin-block:2rem}
+@media(prefers-reduced-motion:reduce){.suitcase-walk.is-leaving,.passports-stage .passport-pair{animation:none}}

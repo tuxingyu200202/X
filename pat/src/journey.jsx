@@ -143,6 +143,40 @@ function Postcard({ city, choice, onAnswer }) {
   </article>;
 }
 
+function SuitcaseDeparture({ onNext, children }) {
+  const [leaving, setLeaving] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const start = useRef(null);
+
+  useEffect(() => {
+    if (!leaving) return;
+    const duration = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 720;
+    const timer = setTimeout(onNext, duration);
+    return () => clearTimeout(timer);
+  }, [leaving, onNext]);
+
+  return <div className="suitcase-departure">
+    <p>{content.ride.suitcaseHint}</p>
+    <div className={leaving ? 'suitcase-walk is-leaving' : 'suitcase-walk'} style={{ '--drag-x': offset + 'px' }}
+      onPointerDown={event => {
+        if (event.button !== 0 || leaving || event.target.closest('button')) return;
+        start.current = event.clientX;
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerMove={event => { if (start.current !== null) setOffset(Math.max(0, event.clientX - start.current)); }}
+      onPointerUp={event => {
+        if (start.current === null) return;
+        if (event.clientX - start.current > 45) setLeaving(true);
+        else setOffset(0);
+        start.current = null;
+      }}
+      onPointerCancel={() => { start.current = null; setOffset(0); }}>
+      {children}
+    </div>
+    <button type="button" className="button button-gold" disabled={leaving} onClick={() => setLeaving(true)}>{content.ride.next}</button>
+  </div>;
+}
+
 export function Ride({ onNext }) {
   const { ride } = content;
   const [count, setCount] = useState(0);
@@ -233,12 +267,14 @@ export function Ride({ onNext }) {
           </div>
         </div>
         {!completed && <button className="button button-gold" disabled={turning || waiting} data-sound="machine" onClick={turn}>{turning ? ride.turning : ride.turn}</button>}
-        {completed && !waiting && <><p className="machine-status">{ride.complete}</p><button className="button button-gold" onClick={onNext}>{ride.next}</button></>}
-        <p className="ride-count" aria-live="polite">{count} / {ride.cities.length} {ride.progress}</p>
+        <p className="ride-count" aria-live="polite" aria-atomic="true">{count}/{ride.cities.length} {ride.progress}</p>
+        {completed && !waiting && <p className="machine-status">{ride.complete}</p>}
       </div>
       <div className="map-grid memory-case" ref={caseArea}>
-        <Suitcase cities={cities} pending={pending} selected={selected}
-          onSelect={index => { if (!waiting) setSelected(current => current === index ? null : index); }} />
+        {completed && !waiting ? <SuitcaseDeparture onNext={onNext}>
+          <Suitcase cities={cities} selected={selected} onSelect={index => setSelected(current => current === index ? null : index)} />
+        </SuitcaseDeparture> : <Suitcase cities={cities} pending={pending} selected={selected}
+          onSelect={index => { if (!waiting) setSelected(current => current === index ? null : index); }} />}
         {active && <div className={'postcard-slot memory-pop' + (packing ? ' memory-packing' : '')}>
           <Postcard key={active.name} city={active} choice={answers[active.name]} onAnswer={answer => setAnswers(previous => ({ ...previous, [active.name]: answer }))} />
           {(!pending || photoReady) && <button type="button" className="text-action memory-dismiss"
